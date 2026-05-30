@@ -44,7 +44,8 @@ never break the contract between layers.
 | **1.0.6** | **Common Record Description — `recall crd` validator** | ✅ Complete |
 | **1.0.7** | **Pipeline Manifest — `recall manifest` unified AI entry point** | ✅ Complete |
 | **1.1.0** | **recall diff + AUDIT DIVISION + LSP (`@semanticintent/recall-lsp`) + recall stats pipeline telemetry** | ✅ Complete |
-| **post-1.1** | **Output targets + recall serve + recall validate + recall import + recall test + GitHub Action + formal standard + semantic versioning** | 📋 Planned |
+| **1.2.0** | **`recall serve` (hot-reload dev server) + `recall validate` (artifact self-validation, VALID-001/002/003)** | ✅ Complete |
+| **post-1.2** | **Output targets + recall import + recall test + GitHub Action + formal standard + semantic versioning + AUTOLEN + --draft mode + recall summarize** | 📋 Planned |
 
 ---
 
@@ -490,7 +491,68 @@ LSP architecture.
 
 ---
 
-## Post-1.1 — Language Maturity
+## v1.2.0 — Dev Server + Artifact Validation ✅ Complete
+
+**Theme:** The source that proves itself.
+
+### `recall serve` — Dev Server with Hot Reload
+
+File-watching dev server that compiles `.rcl` on save and reloads every connected
+browser tab via Server-Sent Events. Zero runtime dependencies — built on Node.js
+built-in `http` and `fs.watch`.
+
+```sh
+recall serve page.rcl              # single file, default port 4321
+recall serve page.rcl --port 8080
+recall serve src/                  # directory mode — all .rcl files + index
+recall serve src/ --port 3000
+```
+
+- **Single-file mode:** serves `GET /` and `GET /page.html`
+- **Directory mode:** serves `GET /` as a live index of all pages
+- **Hot reload:** SSE endpoint at `/__recall_events`; injected client script calls `location.reload()` on message
+- **Copybook changes:** `.rcpy` file changes trigger recompile of all `.rcl` in the same directory
+- **Debounce:** 250ms — editor-save bursts don't trigger multiple recompiles
+
+The compiler remains a pure function. `recall serve` is a thin wrapper.
+
+### `recall validate` — Artifact Self-Validation
+
+Extracts the embedded `.rcl` source from a compiled HTML artifact, recompiles it,
+and verifies the output matches the live file. The "source is the artifact" principle
+taken to its logical conclusion.
+
+```sh
+recall validate page.html                  # verify a local compiled artifact
+recall validate https://example.com        # verify a live URL
+recall validate page.html --format json    # CI-friendly JSON output
+recall validate page.html --quiet          # exit code only (0=valid, 1=invalid)
+```
+
+**Validation path:**
+
+1. If the `.rcl` source file exists alongside the `.html` — use `recall compile` for
+   accurate COPY FROM / LOAD FROM resolution.
+2. If only the `.html` exists (or a URL) — extract embedded source, use
+   `compileFromSource` in-memory. Files using COPY FROM / LOAD FROM may report
+   VALID-001 in this mode; validate locally with the `.rcl` alongside for a
+   definitive result.
+
+**Diagnostic codes:**
+
+| Code | Meaning |
+|---|---|
+| `VALID-001` | Output mismatch — HTML body does not match embedded source |
+| `VALID-002` | No embedded source — file was not compiled by `recall compile` |
+| `VALID-003` | Recompile failed — embedded source has errors |
+
+**What it catches:** Any direct edit to the compiled HTML after compilation — modified
+heading text, injected content, altered links. The embedded source comment is the
+authoritative record; any divergence between it and the body is a VALID-001.
+
+---
+
+## Post-1.2 — Language Maturity
 
 Features that extend the philosophy without changing the foundation.
 

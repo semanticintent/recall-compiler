@@ -13,13 +13,15 @@ import { crdCommand } from './commands/crd.js'
 import { manifestCommand } from './commands/manifest.js'
 import { diffCommand } from './commands/diff.js'
 import { auditCommand } from './commands/audit.js'
+import { serveCommand } from './commands/serve.js'
+import { validateCommand } from './commands/validate.js'
 
 const program = new Command()
 
 program
   .name('recall')
   .description('RECALL — the source that remembers. A COBOL-inspired web interface language.')
-  .version('1.1.0')
+  .version('1.2.0')
   .addHelpText('after', `
 Workflow:
   Before writing .rcl — read the language schema:
@@ -87,7 +89,18 @@ Workflow:
     recall manifest                                        human-readable summary
     recall manifest --json                                 machine-readable JSON
     recall manifest --layer crd                            single layer
-    recall manifest --json --plugin @stratiqx/recall-components  include component list`)
+    recall manifest --json --plugin @stratiqx/recall-components  include component list
+
+  Dev server with hot reload:
+    recall serve page.rcl                    compile, serve, and hot-reload on save
+    recall serve src/ --port 3000            directory mode — all .rcl files + index
+    recall serve page.rcl --port 8080
+
+  Validate a compiled artifact matches its embedded source:
+    recall validate page.html                verify local .html artifact
+    recall validate https://example.com      verify a live URL
+    recall validate page.html --format json  CI-friendly JSON output
+    recall validate page.html --quiet        exit-code only (0=valid, 1=invalid)`)
 
 program.addCommand(compileCommand)
 program.addCommand(checkCommand)
@@ -103,5 +116,7 @@ program.addCommand(crdCommand)
 program.addCommand(manifestCommand)
 program.addCommand(diffCommand)
 program.addCommand(auditCommand)
+program.addCommand(serveCommand)
+program.addCommand(validateCommand)
 
 program.parse()

@@ -1,17 +1,25 @@
 cff-version: 1.2.0
 message: "If you use RECALL or cite the Machine Legibility Dimensions framework, please use the metadata below."
-title: "RECALL: A COBOL-Inspired Publishing Language for the Web, and the Machine Legibility Dimensions Framework"
+title: "RECALL: A COBOL-Inspired Publishing Language for the Web, with Formal Provenance, Semantic Diff, and Machine Legibility Dimensions"
 abstract: >
   RECALL is a declarative publishing language with COBOL-inspired syntax that compiles
   to self-contained HTML. It was designed from the foundation for AI compositor use —
   where the primary reader of source is an AI system rather than a human programmer.
+  Every compiled artifact embeds its own .rcl source in a structured HTML comment,
+  making the artifact self-describing and self-validating. Version 1.1.0 adds the
+  AUDIT DIVISION — a formal language construct that records human and AI authorship
+  in structured, compiler-validated entries (CREATED-BY constrained to: Human, AI
+  compositor, or AI agent). Version 1.1.0 also ships recall diff (semantic AST diff
+  between .rcl sources), recall stats (pipeline telemetry), and a full Language
+  Server Protocol implementation (recall-lsp). Version 1.2.0 adds recall serve (hot-
+  reload dev server) and recall validate (artifact self-validation — extracts embedded
+  source, recompiles, and verifies the live artifact matches its own source).
   This repository also contains the Machine Legibility Dimensions (MLD) framework
   (v0.1), a proposed evaluation framework for notations where the primary reader
-  is an AI system. MLD is a companion to the Cognitive Dimensions of Notations
-  framework (Green & Petre, 1996) and covers properties that the human-reader
-  framework does not address: tokenisation alignment, ambiguity surface, state surface,
-  schema availability, error signal fidelity, intent density, round-trip fidelity,
-  constraint completeness, and decomposability.
+  is an AI system. MLD covers properties that human-reader frameworks do not address:
+  tokenisation alignment, ambiguity surface, state surface, schema availability,
+  error signal fidelity, intent density, round-trip fidelity, constraint completeness,
+  and decomposability.
 authors:
   - family-names: Shatny
     given-names: Michael
@@ -22,11 +30,11 @@ doi: 10.5281/zenodo.19463347
 identifiers:
   - type: doi
     value: 10.5281/zenodo.19463347
-    description: "Zenodo DOI for RECALL v0.8.8 and the Machine Legibility Dimensions framework"
-url: "https://semanticintent.dev"
+    description: "Zenodo DOI for RECALL v0.8.8 and the Machine Legibility Dimensions framework — update candidates: AUDIT DIVISION spec, recall diff schema, LSP architecture, v1.1.0 diagnostic additions (RCL-028/029/030/W11), recall serve, recall validate"
+url: "https://recall.semanticintent.dev"
 license: MIT
-version: 0.8.8
-date-released: "2026-04-07"
+version: 1.2.0
+date-released: "2026-05-30"
 keywords:
   - programming language design
   - publishing language
@@ -38,6 +46,9 @@ keywords:
   - language design frameworks
   - declarative web
   - AI-first language design
+  - provenance tracking
+  - language server protocol
+  - artifact validation
 
 references:
   - type: article
