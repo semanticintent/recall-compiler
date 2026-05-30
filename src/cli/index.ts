@@ -21,7 +21,7 @@ const program = new Command()
 program
   .name('recall')
   .description('RECALL — the source that remembers. A COBOL-inspired web interface language.')
-  .version('1.2.0')
+  .version('1.2.1')
   .addHelpText('after', `
 Workflow:
   Before writing .rcl — read the language schema:

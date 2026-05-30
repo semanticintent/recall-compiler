@@ -891,8 +891,15 @@ export function generate(program: ReclProgram, source: string): string {
   }
   const pageTitle   = resolveIdField(id.pageTitle)   ?? 'RECALL Page'
   const description = resolveIdField(id.description)
-  const ogTitle     = resolveIdField(resolveValue('CASE-TITLE', data) || undefined)
-  const ogDesc      = resolveIdField(resolveValue('CASE-SUBTITLE', data) || undefined)
+  // OG meta: use CASE-TITLE/CASE-SUBTITLE if explicitly declared as DATA fields,
+  // otherwise fall back to PAGE-TITLE/DESCRIPTION from IDENTIFICATION DIVISION.
+  // resolveValue returns the input string when no field is found, so we check
+  // field existence directly rather than relying on the truthy return value.
+  const _allFields     = [...data.workingStorage, ...data.items]
+  const _caseTitleFld  = _allFields.find(f => f.name === 'CASE-TITLE')
+  const _caseSubFld    = _allFields.find(f => f.name === 'CASE-SUBTITLE')
+  const ogTitle        = _caseTitleFld ? resolveIdField(_caseTitleFld.value) : pageTitle
+  const ogDesc         = _caseSubFld   ? resolveIdField(_caseSubFld.value)   : description
 
   const baseCss = env.suppressDefaultCss ? '' : generateCss(env)
   const css = env.styleBlock
