@@ -898,8 +898,11 @@ export function generate(program: ReclProgram, source: string): string {
   const _allFields     = [...data.workingStorage, ...data.items]
   const _caseTitleFld  = _allFields.find(f => f.name === 'CASE-TITLE')
   const _caseSubFld    = _allFields.find(f => f.name === 'CASE-SUBTITLE')
-  const ogTitle        = _caseTitleFld ? resolveIdField(_caseTitleFld.value) : pageTitle
-  const ogDesc         = _caseSubFld   ? resolveIdField(_caseSubFld.value)   : description
+  // Strip markdown emphasis (*x* / **x** / __x__) — OG title is a plain-text attribute.
+  const stripEmphasis  = (s?: string) => s ? s.replace(/(\*\*?|__)(.+?)\1/g, '$2') : s
+  const ogTitle        = stripEmphasis(_caseTitleFld ? resolveIdField(_caseTitleFld.value) : pageTitle)
+  // og:description prefers the purpose-built DESCRIPTION/META-DESCRIPTION; CASE-SUBTITLE is a fallback only.
+  const ogDesc         = description ?? (_caseSubFld ? resolveIdField(_caseSubFld.value) : undefined)
 
   const baseCss = env.suppressDefaultCss ? '' : generateCss(env)
   const css = env.styleBlock
