@@ -487,16 +487,22 @@ function renderParagraph(stmt: DisplayStatement, data: DataDivision): string {
   const resolved   = resolveValue(stmt.value, data)
   // If a variable name could not be resolved, skip rendering (graceful degradation)
   if (!resolved || (/^[A-Z][A-Z0-9-]+$/.test(stmt.value ?? '') && resolved === stmt.value)) return ''
-  const raw        = inlineCode(resolved)
   const color      = clause(stmt.clauses, 'COLOR', '').replace('COLOR-', '').toLowerCase()
   const styleClause = clause(stmt.clauses, 'STYLE', '')
   const citations  = clause(stmt.clauses, 'CITATIONS', '') === 'YES'
   const hrefRaw    = clause(stmt.clauses, 'HREF', '')
-  const text       = citations ? linkCitations(raw) : raw
   const cssClass   = styleClause ? styleClause.toLowerCase().replace(/_/g, '-') : (color ? `color-${color}` : '')
-  // WITH HREF: wrap the paragraph text in an anchor
-  const inner      = hrefRaw ? `<a href="${escapeHtml(hrefRaw)}">${text}</a>` : text
-  return `<p${cssClass ? ` class="${cssClass}"` : ''}>${inner}</p>`
+  // Split on a blank line (literal \n\n or actual newlines) → separate <p> each;
+  // collapse stray single newlines to spaces. No blank line ⇒ one <p> (unchanged).
+  const paras = resolved
+    .split(/(?:\\n|\r?\n)[ \t]*(?:\\n|\r?\n)/)
+    .map(p => p.replace(/\\n|\r?\n/g, ' ').trim())
+    .filter(Boolean)
+  return paras.map(p => {
+    const text  = citations ? linkCitations(inlineCode(p)) : inlineCode(p)
+    const inner = hrefRaw ? `<a href="${escapeHtml(hrefRaw)}">${text}</a>` : text
+    return `<p${cssClass ? ` class="${cssClass}"` : ''}>${inner}</p>`
+  }).join('\n  ')
 }
 
 function renderButton(stmt: DisplayStatement, data: DataDivision): string {
