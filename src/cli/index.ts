@@ -1,3 +1,4 @@
+import { createRequire } from 'module'
 import { Command } from 'commander'
 import { compileCommand } from './commands/compile.js'
 import { checkCommand } from './commands/check.js'
@@ -16,12 +17,14 @@ import { auditCommand } from './commands/audit.js'
 import { serveCommand } from './commands/serve.js'
 import { validateCommand } from './commands/validate.js'
 
+const { version } = createRequire(import.meta.url)('../../package.json') as { version: string }
+
 const program = new Command()
 
 program
   .name('recall')
   .description('RECALL — the source that remembers. A COBOL-inspired web interface language.')
-  .version('1.2.1')
+  .version(version)
   .addHelpText('after', `
 Workflow:
   Before writing .rcl — read the language schema:
