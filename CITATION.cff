@@ -33,8 +33,8 @@ identifiers:
     description: "Zenodo DOI for RECALL v0.8.8 and the Machine Legibility Dimensions framework — update candidates: AUDIT DIVISION spec, recall diff schema, LSP architecture, v1.1.0 diagnostic additions (RCL-028/029/030/W11), recall serve, recall validate"
 url: "https://recall.semanticintent.dev"
 license: MIT
-version: 1.2.1
-date-released: "2026-05-30"
+version: 1.2.2
+date-released: "2026-11-15"
 keywords:
   - programming language design
   - publishing language
