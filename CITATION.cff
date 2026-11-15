@@ -26,14 +26,14 @@ authors:
     alias: semanticintent
     website: "https://semanticintent.dev"
 repository-code: "https://github.com/semanticintent/recall-compiler"
-doi: 10.5281/zenodo.19463347
+doi: 10.5281/zenodo.19463346
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.19463347
+    value: 10.5281/zenodo.19463346
     description: "Zenodo DOI for RECALL v0.8.8 and the Machine Legibility Dimensions framework — update candidates: AUDIT DIVISION spec, recall diff schema, LSP architecture, v1.1.0 diagnostic additions (RCL-028/029/030/W11), recall serve, recall validate"
 url: "https://recall.semanticintent.dev"
 license: MIT
-version: 1.2.0
+version: 1.2.1
 date-released: "2026-05-30"
 keywords:
   - programming language design
